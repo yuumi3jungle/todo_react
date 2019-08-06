@@ -12,11 +12,17 @@ rake db:migrate
 rails s   # Add test data and exit(^C)
 git add .
 git commit -m 'Add Todo scaffold'
+# add gem 'rack-cors' to Gemfile
+bundle install
+# add rack-cors setting to config/application.rb
+# add protect_from_forgery code to app/controllers/todos_controller.rb
+git add .
+git commit -m 'Add CORS'
+
 mkdir frontend
 cd frontend/
 mkdir src
 mkdir public
-
 npm init -y
 npm install react react-dom
 npm install webpack webpack-cli webpack-dev-server --save-dev
@@ -33,8 +39,34 @@ git commit -m 'Add React environment'
 
 ## Files
 
-* .babelrc
+#### Ruby on Rails
 
+* Gemfile に以下の行を追加
+
+```ruby
+gem 'rack-cors'
+```
+
+* config/application.rb の32行目に以下の行を追加
+
+```ruby
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'
+        resource '*', headers: :any, methods: [:get, :post, :put, :options]
+      end
+    end
+```
+
+* app/controllers/todos_controller.rb の32行目に以下の行を追加
+
+```ruby
+  protect_from_forgery unless: -> { request.format.json? }
+```
+
+#### React
+
+* .babelrc
 
 ```json
 {
